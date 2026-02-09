@@ -1,3 +1,4 @@
+import sendMailMessage from "../api-connections/mail.js";
 import sendTelegramMessage from "../api-connections/telegram.js";
 
 export function externalApiDown(data) {
@@ -10,4 +11,5 @@ criticality: ${data.commonLabels.severity}
 down: ${data.alerts[0].startsAt}
 up: ${data.status === "firing" ? "-" : data.alerts[0].endsAt}`;
   sendTelegramMessage(message);
+  sendMailMessage(message);
 }
