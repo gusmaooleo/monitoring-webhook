@@ -11,5 +11,6 @@ const knwonCases = {
 export function handleCase(data) {
   console.log(`[${new Date().toDateString()}] Received alert`);
   const caseFunction = knwonCases[data.commonLabels.alertname];
+  console.log(data);
   caseFunction(data);
 }
