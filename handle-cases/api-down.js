@@ -18,7 +18,7 @@ up: ${data.status === "firing" ? "-" : data.alerts[0].endsAt}`;
       { tags: data.commonLabels.api },
       { sort: { _id: -1 } },
     );
-    message = message.concat("\nlog:\n```json", lastLog, "```")
+    message = message.concat("\nlog:\n```json\n", JSON.stringify(lastLog), "\n```")
   } catch (error) {
     console.error(error);
   }
