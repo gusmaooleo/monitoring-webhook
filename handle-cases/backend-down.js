@@ -1,15 +1,17 @@
 import sendMailMessage from "../api-connections/mail.js";
 import sendTelegramMessage from "../api-connections/telegram.js";
+import { buildAlertMessage } from "./message-template.js";
 
 export function backendDown(data) {
-  const message = `
-Backend down: [${new Date().toLocaleDateString()}]
-client: ${process.env.CLIENT ?? "Dev"}
-client_ip:${process.env.CLIENT_IP ?? "localhost"} 
-status: ${data.status}
-criticality: ${data.commonLabels.severity} 
-down: ${data.alerts[0].startsAt}
-up: ${data.status === "firing" ? "-" : data.alerts[0].endsAt}`;
+  const message = buildAlertMessage({
+    title: "Backend indisponivel",
+    data,
+    resourceFields: [{ label: "Servico", value: "Backend principal" }],
+    extraFields: [
+      { label: "Regra de alerta", value: data?.commonLabels?.alertname },
+    ],
+  });
+
   sendTelegramMessage(message);
-  sendMailMessage(message)
+  sendMailMessage(message);
 }

@@ -1,16 +1,22 @@
-export default async function sendTelegramMessage(text) {
+export default async function sendTelegramMessage(text, options = {}) {
   try {
     const token = process.env.BOT_KEY;
     const chat_id = process.env.BOT_CHAT_ID;
+    const body = {
+      chat_id,
+      text,
+    };
+
+    if (options.parseMode) {
+      body.parse_mode = options.parseMode;
+    }
+
     const payload = await fetch(
       `https://api.telegram.org/bot${token}/sendMessage`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          chat_id,
-          text,
-        }),
+        body: JSON.stringify(body),
       },
     );
 
