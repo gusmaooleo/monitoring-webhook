@@ -1,7 +1,7 @@
 import express from "express";
 import { configDotenv } from "dotenv";
 import { handleCase } from "./handle-cases/handle-cases.js";
-// import { DatabaseConfig } from "./config/database-config.js";
+import { DatabaseConfig } from "./config/database-config.js";
 // import { startCameraVideoConfigRoutine } from "./routines/camera-video-config-routine.js";
 
 configDotenv();
