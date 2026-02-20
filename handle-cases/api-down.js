@@ -101,6 +101,29 @@ async function clearFiringThrottle(apiTag, clientName) {
   );
 }
 
+function parseKnownOffApis(rawKnownOffApis) {
+  if (!rawKnownOffApis) {
+    return [];
+  }
+
+  const normalized = rawKnownOffApis.trim();
+
+  try {
+    const parsed = JSON.parse(normalized.replaceAll("'", '"'));
+    if (Array.isArray(parsed)) {
+      return parsed
+        .map((known_service) => String(known_service).trim())
+        .filter(Boolean);
+    }
+  } catch (_) {}
+
+  return normalized
+    .replace(/^\[|\]$/g, "")
+    .split(",")
+    .map((known_service) => known_service.replace(/['"]/g, "").trim())
+    .filter(Boolean);
+}
+
 export async function externalApiDown(data) {
   const { apiTag, clientName } = resolveAlertContext(data);
   const alertStatus = data?.status;
@@ -202,6 +225,12 @@ export async function externalApiDown(data) {
     console.error(error);
   }
   console.log("[MESSAGE SENT]\n", message);
+
+  const knownOffApis = parseKnownOffApis(process.env.KNOWN_DOWN_APIS);
+  if (knownOffApis.includes(apiTag)) {
+    console.log(`[RECEIVED ALERT] - Received alert from known down host.`);
+    return;
+  }
 
   sendTelegramMessage(message, telegramOptions);
   sendMailMessage(message);
