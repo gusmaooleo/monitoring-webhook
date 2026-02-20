@@ -1,5 +1,19 @@
-Rename this folder to "webhook" (docker-compopse will recognize)
--> ask me the .env files
+# webhook
 
+Servico responsavel por receber alertas do Alertmanager e distribuir notificacoes para Telegram/email.
 
-this service currently send a telegram message and a email when service is down or the main backend is down.
+## Documentacao completa
+
+- Fluxo de alertas e casos: `docs/alert-flow.md`
+
+## Execucao
+
+```bash
+npm install
+npm start
+```
+
+O endpoint principal e:
+
+- `POST /alert`
+
